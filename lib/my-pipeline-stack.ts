@@ -13,7 +13,11 @@ export class MyPipelineStack extends cdk.Stack {
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "MyPipeline",
       synth: new ShellStep("Synth", {
-        input: CodePipelineSource.gitHub("westlag114/my-pipeline", "main"),
+        input: CodePipelineSource.gitHub("westlag114/my-pipeline", "main", {
+          authentication: cdk.SecretValue.secretsManager(
+            "github-access-token-secret"
+          ),
+        }),
         commands: ["npm ci", "npm run build", "npx cdk synth"],
       }),
     });
